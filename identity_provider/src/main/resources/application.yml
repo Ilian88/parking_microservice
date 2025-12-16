@@ -1,0 +1,22 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: oauth2-idp
+  datasource:
+    url: jdbc:h2:mem:oauth2
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+
+oath2:
+  parking-app:
+    client-id: pci_cli_id
+    client-secret: very_secret_big

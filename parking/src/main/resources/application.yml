@@ -1,0 +1,41 @@
+spring:
+  application:
+    name: parking
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    #      url: jdbc:postgresql://db:5432/postgres?useSSL=false
+    url: jdbc:postgresql://localhost:5432/parking?useSSL=false
+    username: postgres
+    password: 12345
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: TRUE
+    hibernate:
+#      ddl-auto: update
+      ddl-auto: update
+    defer-datasource-initialization: true
+    show-sql: true
+  logging:
+    level:
+      org:
+        springframework:
+          security: DEBUG
+        hibernate:
+          SQL: DEBUG
+          type:
+            descriptor: TRACE
+      blog: DEBUG
+      root: debug
+  server:
+    port: 8080
+    error:
+      whitelabel:
+        enabled: false
+      path: /error
