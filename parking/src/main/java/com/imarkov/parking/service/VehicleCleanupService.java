@@ -47,10 +47,11 @@ public class VehicleCleanupService {
             logger.info("Vehicle to be purged: {}", vehicle.getLicensePlate());
         }
 
-        purgedVehicleRepo.saveAll(purgedVehicles);
-        vehicleRepo.deleteAll(allVehicleLeft);
-
-        logger.info("Successfully purged {} vehicles that are no longer in the parking", purgedVehicles.size());
+        if (!allVehicleLeft.isEmpty()) {
+            purgedVehicleRepo.saveAll(purgedVehicles);
+            vehicleRepo.deleteAll(allVehicleLeft);
+            logger.info("Successfully purged {} vehicles that are no longer in the parking", purgedVehicles.size());
+        }
     }
 
     private long calculateTimeSpent(LocalDateTime start, LocalDateTime end) {

@@ -1,6 +1,7 @@
 package com.imarkov.parking.service;
 
 import com.imarkov.parking.exception.NoSuchVehicleException;
+import com.imarkov.parking.exception.VehicleAlreadyExistsException;
 import com.imarkov.parking.model.CurrencyEnum;
 import com.imarkov.parking.model.dao.CarEntity;
 import com.imarkov.parking.model.dao.PaymentInfoDTO;
@@ -55,6 +56,9 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleCreatedDTO createVehicle(VehicleEnterDTO vehicleEnterDTO) {
+        if (vehicleRepo.findByLicensePlate(vehicleEnterDTO.getLicensePlate()).orElse(null) != null) {
+            throw new VehicleAlreadyExistsException("Vehicle with licensePlate " + vehicleEnterDTO.getLicensePlate() + " already exists in the parking");
+        }
         Vehicle vehicle;
         if (vehicleEnterDTO instanceof CarEnterDTO carEnterDTO) {
             vehicle = VehicleDTOMapper.mapCreateCarDtoToEntity(carEnterDTO);

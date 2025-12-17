@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Vehicle extends BaseEntity {
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String licensePlate;
 
     @Enumerated(EnumType.STRING)

@@ -1,9 +1,6 @@
 package com.imarkov.parking.model.dao;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -14,8 +11,8 @@ public class ParkingSession extends BaseEntity {
 
     private LocalDateTime leftAt;
 
-    @ManyToOne
-    @JoinColumn(name = "vehicle_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
     public ParkingSession (){
