@@ -1,11 +1,9 @@
 package com.imarkov.parking.model;
 
 import com.imarkov.parking.model.dao.BaseEntity;
+import com.imarkov.parking.model.dao.ParkingSession;
 import com.imarkov.parking.model.dao.Vehicle;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
@@ -18,6 +16,8 @@ public class PurgedVehicle extends BaseEntity {
     private BigDecimal amountPayed;
     @Enumerated(value = EnumType.STRING)
     private CurrencyEnum currency;
+    @OneToOne
+    private ParkingSession parkingSession;
 
     public String getLicensePlate() {
         return licensePlate;
@@ -70,6 +70,15 @@ public class PurgedVehicle extends BaseEntity {
 
     public PurgedVehicle setCurrency(CurrencyEnum currency) {
         this.currency = currency;
+        return this;
+    }
+
+    public ParkingSession getParkingSession() {
+        return parkingSession;
+    }
+
+    public PurgedVehicle setParkingSession(ParkingSession parkingSession) {
+        this.parkingSession = parkingSession;
         return this;
     }
 }

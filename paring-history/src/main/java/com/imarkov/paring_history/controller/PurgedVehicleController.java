@@ -1,6 +1,5 @@
 package com.imarkov.paring_history.controller;
 
-import com.imarkov.paring_history.model.PurgedVehicle;
 import com.imarkov.paring_history.model.PurgedVehicleDTO;
 import com.imarkov.paring_history.service.PurgedVehicleService;
 import org.springframework.http.ResponseEntity;

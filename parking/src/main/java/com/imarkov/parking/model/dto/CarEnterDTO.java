@@ -1,9 +1,13 @@
 package com.imarkov.parking.model.dto;
 
 import com.imarkov.parking.model.dao.Vehicle;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class CarEnterDTO extends VehicleEnterDTO {
+    @NotBlank(message = "model cannot be empty")
     private String model;
+    @NotBlank(message = "make cannot be empty")
     private String make;
     private String color;
 

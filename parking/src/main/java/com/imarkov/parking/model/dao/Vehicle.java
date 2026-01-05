@@ -11,7 +11,7 @@ public abstract class Vehicle extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private EuroCategory euroCategory;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL) // needs @Transactional for reading when is lazy
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST) // needs @Transactional for reading when is lazy
     private ParkingSession parkingSession;
 
     public String getLicensePlate() {

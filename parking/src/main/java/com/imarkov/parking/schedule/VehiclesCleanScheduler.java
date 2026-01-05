@@ -17,7 +17,8 @@ public class VehiclesCleanScheduler {
     }
 
 
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
+//    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
+    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     public void cleanupLeftVehicles() {
         ThreadExecPool threadExecPool = ThreadExecPool.getInstance();
         threadExecPool.submit(new CleanupDatabase(vehicleCleanupService));
