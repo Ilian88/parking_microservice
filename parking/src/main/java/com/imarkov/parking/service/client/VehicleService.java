@@ -1,10 +1,7 @@
 package com.imarkov.parking.service.client;
 
 import com.imarkov.parking.model.dao.PaymentInfoDTO;
-import com.imarkov.parking.model.dto.VehicleCreatedDTO;
-import com.imarkov.parking.model.dto.VehicleEnterDTO;
-import com.imarkov.parking.model.dto.VehicleGeneralDTO;
-import com.imarkov.parking.model.dto.VehicleLeaveDTO;
+import com.imarkov.parking.model.dto.*;
 
 import java.util.List;
 

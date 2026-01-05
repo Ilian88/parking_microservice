@@ -3,9 +3,12 @@ package com.imarkov.parking.controller;
 import com.imarkov.parking.exception.ApiError;
 import com.imarkov.parking.model.dao.PaymentInfoDTO;
 import com.imarkov.parking.model.dto.VehicleCreatedDTO;
+import com.imarkov.parking.model.dto.VehicleDTO;
 import com.imarkov.parking.model.dto.VehicleEnterDTO;
 import com.imarkov.parking.model.dto.VehicleGeneralDTO;
+import com.imarkov.parking.service.client.PurgedVehicleService;
 import com.imarkov.parking.service.client.VehicleService;
+import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -13,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,18 +24,25 @@ import java.util.List;
 @RequestMapping("/vehicles")
 public class VehicleController {
     private final VehicleService vehicleService;
+    private final PurgedVehicleService purgedVehicleService;
 
-    public VehicleController(VehicleService vehicleService) {
+    public VehicleController(VehicleService vehicleService, PurgedVehicleService purgedVehicleService) {
         this.vehicleService = vehicleService;
+        this.purgedVehicleService = purgedVehicleService;
     }
 
     @GetMapping("/current/all")
-    public List<VehicleGeneralDTO> getAllCurrent() {
-        return vehicleService.getAllCurrent();
+    public ResponseEntity<List<VehicleGeneralDTO>> getAllCurrent() {
+        return ResponseEntity.ok(vehicleService.getAllCurrent());
+    }
+
+    @GetMapping("/history")
+    public  ResponseEntity<List<VehicleDTO>> getVehiclesLeftForPeriod(@RequestParam LocalDate start, @RequestParam LocalDate until) {
+        return ResponseEntity.ok(this.purgedVehicleService.findRecordsBetween(start, until));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<VehicleCreatedDTO> vehicleEnters(@RequestBody VehicleEnterDTO vehicleCreateDTO) {
+    public ResponseEntity<VehicleCreatedDTO> vehicleEnters(@Valid @RequestBody VehicleEnterDTO vehicleCreateDTO) {
         VehicleCreatedDTO vehicle = vehicleService.createVehicle(vehicleCreateDTO);
 
         return ResponseEntity.ok().body(vehicle);

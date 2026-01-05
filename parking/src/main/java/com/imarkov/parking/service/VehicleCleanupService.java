@@ -40,15 +40,20 @@ public class VehicleCleanupService {
                     .setLicensePlate(vehicle.getLicensePlate())
                     .setTimeSpent(calculateTimeSpent(vehicle.getParkingSession().getEnteredAt(), vehicle.getParkingSession().getLeftAt()))
                     .setVehicleType(vehicle instanceof CarEntity ? Vehicle.VehicleType.CAR.toString() : Vehicle.VehicleType.TRUCK.toString())
-                    .setEuroCategory(vehicle.getEuroCategory());
+                    .setEuroCategory(vehicle.getEuroCategory())
+                    .setParkingSession(vehicle.getParkingSession());
 
             purgedVehicles.add(purgedVehicle);
+
+            vehicle.setParkingSession(null);
 
             logger.info("Vehicle to be purged: {}", vehicle.getLicensePlate());
         }
 
         if (!allVehicleLeft.isEmpty()) {
-            purgedVehicleRepo.saveAll(purgedVehicles);
+            purgedVehicleRepo.saveAllAndFlush(purgedVehicles);
+            vehicleRepo.saveAllAndFlush(allVehicleLeft);
+
             vehicleRepo.deleteAll(allVehicleLeft);
             logger.info("Successfully purged {} vehicles that are no longer in the parking", purgedVehicles.size());
         }

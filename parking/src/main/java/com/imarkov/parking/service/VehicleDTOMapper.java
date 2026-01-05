@@ -22,7 +22,7 @@ public class VehicleDTOMapper {
         carEntity.setEuroCategory(dto.getEuroCategory());
         ParkingSession parkingSession = new ParkingSession();
 
-        parkingSession.setVehicle(carEntity);
+//        parkingSession.setVehicle(carEntity);
         carEntity.setParkingSession(parkingSession);
 
         return carEntity;

@@ -11,21 +11,21 @@ public class ParkingSession extends BaseEntity {
 
     private LocalDateTime leftAt;
 
-    @OneToOne
-    @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
+//    @OneToOne
+//    @JoinColumn(name = "vehicle_id")
+//    private Vehicle vehicle;
 
     public ParkingSession (){
         this.enteredAt = LocalDateTime.now();
     }
 
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
+//    public Vehicle getVehicle() {
+//        return vehicle;
+//    }
+//
+//    public void setVehicle(Vehicle vehicle) {
+//        this.vehicle = vehicle;
+//    }
 
     public LocalDateTime getEnteredAt() {
         return enteredAt;

@@ -60,7 +60,7 @@ public class DBInitializer {
                 carEntity.setEuroCategory(Vehicle.EuroCategory.THREE);
 
                 ParkingSession parkingSession = new ParkingSession();
-                parkingSession.setVehicle(carEntity);
+//                parkingSession.setVehicle(carEntity);
                 parkingSession.setEnteredAt(LocalDateTime.now());
 
                 carEntity.setParkingSession(parkingSession);

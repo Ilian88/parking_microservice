@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: parking-history
+
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/parking_history
+    username: postgres
+    password: 12345
+    pool:
+      initial-size: 5
+      max-size: 20
+
+  sql:
+    init:
+      mode: always
+
+#  flyway:
+#    enabled: true
+#    url: jdbc:postgresql://localhost:5432/parking_history
+#    user: postgres
+#    password: 12345
+#    locations: classpath:db/migration
+#    baseline-on-migrate: true
+#    placeholders:
+#      schema: public
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+
+server:
+  port: 8082
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+
+logging:
+  level:
+    org:
+      flywaydb: DEBUG
+      springframework:
+        security: DEBUG
+    root: DEBUG

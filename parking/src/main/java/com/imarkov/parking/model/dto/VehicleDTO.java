@@ -1,13 +1,16 @@
 package com.imarkov.parking.model.dto;
 
 import com.imarkov.parking.model.dao.Vehicle;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-public abstract class VehicleDTO {
+public class VehicleDTO {
+    @NotNull(message = "license is mandatory")
     private String licensePlate;
     private LocalDateTime enteredAt;
     private LocalDateTime leftAt;
+    @NotNull(message = "euro category is mandatory")
     private Vehicle.EuroCategory euroCategory;
 
     public String getLicensePlate() {

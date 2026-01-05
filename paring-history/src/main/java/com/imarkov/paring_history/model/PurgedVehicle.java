@@ -1,23 +1,20 @@
-package com.imarkov.parking.model;
+package com.imarkov.paring_history.model;
 
-import com.imarkov.parking.model.dao.BaseEntity;
-import com.imarkov.parking.model.dao.ParkingSession;
-import com.imarkov.parking.model.dao.Vehicle;
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 
-@Entity
-public class PurgedVehicle extends BaseEntity {
+@Table("purged_vehicle")
+public class PurgedVehicle {
+    @Id
+    private long id;
     private String licensePlate;
     private String vehicleType;
-    private Vehicle.EuroCategory euroCategory;
+    private String euroCategory;
     private long timeSpent;
     private BigDecimal amountPayed;
-    @Enumerated(value = EnumType.STRING)
-    private CurrencyEnum currency;
-    @OneToOne
-    private ParkingSession parkingSession;
+    private String currency;
 
     public String getLicensePlate() {
         return licensePlate;
@@ -37,13 +34,8 @@ public class PurgedVehicle extends BaseEntity {
         return this;
     }
 
-    public Vehicle.EuroCategory getEuroCategory() {
+    public String getEuroCategory() {
         return euroCategory;
-    }
-
-    public PurgedVehicle setEuroCategory(Vehicle.EuroCategory euroCategory) {
-        this.euroCategory = euroCategory;
-        return this;
     }
 
     public long getTimeSpent() {
@@ -64,21 +56,40 @@ public class PurgedVehicle extends BaseEntity {
         return this;
     }
 
-    public CurrencyEnum getCurrency() {
+    public PurgedVehicle setEuroCategory(String euroCategory) {
+        this.euroCategory = euroCategory;
+        return this;
+    }
+
+    public String getCurrency() {
         return currency;
     }
 
-    public PurgedVehicle setCurrency(CurrencyEnum currency) {
+    public PurgedVehicle setCurrency(String currency) {
         this.currency = currency;
         return this;
     }
 
-    public ParkingSession getParkingSession() {
-        return parkingSession;
+    public long getId() {
+        return id;
     }
 
-    public PurgedVehicle setParkingSession(ParkingSession parkingSession) {
-        this.parkingSession = parkingSession;
+    public PurgedVehicle setId(long id) {
+        this.id = id;
         return this;
+    }
+
+    public enum EuroCategory {
+        ONE,
+        TWO,
+        THREE,
+        FOUR,
+        FIVE,
+        SIX
+    }
+
+    public enum Currency {
+        BGN,
+        EUR
     }
 }
