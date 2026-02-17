@@ -4,21 +4,19 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 
-public class PaymentRequestDTO {
+public class StayDetails {
     private LocalDateTime enteredAt;
     private LocalDateTime leftAt;
     private double ratePerHour;
 
-
-    public PaymentRequestDTO() {
-    }
+    public StayDetails() {}
 
     @NotNull(message = "EnteredAt property is mandatory")
     public LocalDateTime getEnteredAt() {
         return enteredAt;
     }
 
-    public PaymentRequestDTO setEnteredAt(LocalDateTime enteredAt) {
+    public StayDetails setEnteredAt(LocalDateTime enteredAt) {
         this.enteredAt = enteredAt;
         return this;
     }
@@ -28,7 +26,7 @@ public class PaymentRequestDTO {
         return leftAt;
     }
 
-    public PaymentRequestDTO setLeftAt(LocalDateTime leftAt) {
+    public StayDetails setLeftAt(LocalDateTime leftAt) {
         this.leftAt = leftAt;
         return this;
     }
@@ -38,7 +36,7 @@ public class PaymentRequestDTO {
         return ratePerHour;
     }
 
-    public PaymentRequestDTO setRatePerHour(double ratePerHour) {
+    public StayDetails setRatePerHour(double ratePerHour) {
         this.ratePerHour = ratePerHour;
         return this;
     }

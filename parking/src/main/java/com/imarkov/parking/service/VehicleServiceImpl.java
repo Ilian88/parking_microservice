@@ -2,11 +2,14 @@ package com.imarkov.parking.service;
 
 import com.imarkov.parking.exception.NoSuchVehicleException;
 import com.imarkov.parking.exception.VehicleAlreadyExistsException;
+import com.imarkov.parking.external.PaymentInfoGateAway;
 import com.imarkov.parking.model.CurrencyEnum;
 import com.imarkov.parking.model.dao.CarEntity;
 import com.imarkov.parking.model.dao.PaymentInfoDTO;
 import com.imarkov.parking.model.dao.Vehicle;
 import com.imarkov.parking.model.dto.*;
+import com.imarkov.parking.remote.ParkingHistoryGateway;
+import com.imarkov.parking.remote.ParkingHistoryGatewayImpl;
 import com.imarkov.parking.repo.VehicleRepo;
 import com.imarkov.parking.service.client.VehicleService;
 import org.apache.coyote.BadRequestException;
@@ -23,6 +26,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.net.Authenticator;
@@ -34,13 +39,15 @@ import java.util.Map;
 @Service
 public class VehicleServiceImpl implements VehicleService {
     private static final Logger logger = LoggerFactory.getLogger(VehicleServiceImpl.class);
-    private static final String GET_PAYMENT_INFO_URL = "http://localhost:8081/payment/info";
+    private final PaymentInfoGateAway paymentInfoGateAway;
+//    private static final String GET_PAYMENT_INFO_URL = "http://localhost:8081/payment/info";
 
     private final VehicleRepo vehicleRepo;
     private final ModelMapper modelMapper;
     private final RestTemplate restTemplate;
 
-    public VehicleServiceImpl(VehicleRepo vehicleRepo, ModelMapper modelMapper, RestTemplate restTemplate) {
+    public VehicleServiceImpl(PaymentInfoGateAway paymentInfoGateAway, VehicleRepo vehicleRepo, ModelMapper modelMapper, RestTemplate restTemplate) {
+        this.paymentInfoGateAway = paymentInfoGateAway;
         this.vehicleRepo = vehicleRepo;
         this.modelMapper = modelMapper;
         this.restTemplate = restTemplate;
@@ -83,22 +90,16 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle vehicle = vehicleRepo.findByLicensePlate(licensePlate)
                 .orElseThrow(()-> new NoSuchVehicleException("There is no such vehicle with plate: "  + licensePlate));
 
-        HttpEntity<GetPaymentInfoDTO> httpEntity = getGetPaymentInfoDTOHttpEntity(vehicle);
-        ResponseEntity<PaymentInfoResponse> infoTillNowEntity = restTemplate.exchange(
-                    GET_PAYMENT_INFO_URL,
-                    HttpMethod.POST,
-                    httpEntity,
-                    PaymentInfoResponse.class);
+        PaymentInfoGateAway.PaymentInfoResponse infoTillNow = paymentInfoGateAway.getInfoTillNow(vehicle);
 
-        PaymentInfoResponse infoTillNow = infoTillNowEntity.getBody();
         if (infoTillNow == null) {
             throw new RuntimeException("Some exception to change");
         }
 
         return new PaymentInfoDTO(
                 licensePlate,
-                infoTillNow.timeSpentInHours,
-                infoTillNow.amountTillNow,
+                infoTillNow.timeSpentInHours(),
+                infoTillNow.amountTillNow(),
                 vehicle.getEuroCategory()
         );
     }
@@ -107,52 +108,40 @@ public class VehicleServiceImpl implements VehicleService {
     public VehicleLeaveDTO requestLeave(String licensePlate) {
         Vehicle vehicle = vehicleRepo.findByLicensePlate(licensePlate).orElseThrow(() -> new NoSuchVehicleException(String.format("Vehicle with licensePlate %s is not found", licensePlate)));
 
-        HttpEntity<GetPaymentInfoDTO> getPaymentInfoDTOHttpEntity = getGetPaymentInfoDTOHttpEntity(vehicle);
-
-        ResponseEntity<PaymentInfoResponse> paymentInfoResponseResponseEntity = restTemplate.exchange(
-                GET_PAYMENT_INFO_URL,
-                HttpMethod.POST,
-                getPaymentInfoDTOHttpEntity,
-                PaymentInfoResponse.class);
-
+        PaymentInfoGateAway.PaymentInfoResponse paymentInfoResponse = paymentInfoGateAway.getInfoTillNow(vehicle);
         vehicle.getParkingSession().setLeftAt(LocalDateTime.now());
+
         Vehicle save = vehicleRepo.save(vehicle);
 
-        PaymentInfoResponse paymentInfoResponse = paymentInfoResponseResponseEntity.getBody();
         if (paymentInfoResponse == null) {
             throw new RuntimeException("Unsuccessful payment");
         }
 
-        return (VehicleLeaveDTO) new VehicleLeaveDTO()
+        VehicleLeaveDTO vehicleLeaveDTO = getVehicleLeaveDTO(paymentInfoResponse, save);
+
+        new ParkingHistoryGatewayImpl(vehicleLeaveDTO, UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("localhost")
+                .port(8082)
+                .pathSegment("history", "create")
+                .build()
+                .toString())
+                .sendVehicle();
+
+        return vehicleLeaveDTO;
+    }
+
+    private static VehicleLeaveDTO getVehicleLeaveDTO(PaymentInfoGateAway.PaymentInfoResponse paymentInfoResponse, Vehicle save) {
+        VehicleLeaveDTO vehicleLeaveDTO = (VehicleLeaveDTO) new VehicleLeaveDTO()
                 .setTimeSpent(paymentInfoResponse.timeSpentInHours())
-                .setPaidAmount(paymentInfoResponse.amountTillNow)
+                .setPaidAmount(paymentInfoResponse.amountTillNow())
                 .setCurrency(CurrencyEnum.EUR)
                 .setLicensePlate(save.getLicensePlate())
                 .setEnteredAt(save.getParkingSession().getEnteredAt())
                 .setLeftAt(save.getParkingSession().getLeftAt())
                 .setEuroCategory(save.getEuroCategory());
+        return vehicleLeaveDTO;
     }
-
-    private static HttpEntity<GetPaymentInfoDTO> getGetPaymentInfoDTOHttpEntity(Vehicle vehicle) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        HttpHeaders httpHeaders = new HttpHeaders();
-
-        if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
-            String token = jwtAuthenticationToken.getToken().getTokenValue();
-            httpHeaders.setBearerAuth(token);
-        }
-
-        HttpEntity<GetPaymentInfoDTO> httpEntity = new HttpEntity<>(
-                new GetPaymentInfoDTO(vehicle.getParkingSession().getEnteredAt(), LocalDateTime.now(), 2.0),
-                httpHeaders);
-        return httpEntity;
-    }
-
-//
-//    }
-
-    private record GetPaymentInfoDTO(LocalDateTime enteredAt, LocalDateTime leftAt, double ratePerHour){}
-    private record PaymentInfoResponse(long timeSpentInHours, BigDecimal amountTillNow){}
 
     private static class VehicleMapper {
         private static VehicleGeneralDTO mapGeneralVehicleDTO(Vehicle vehicle) {

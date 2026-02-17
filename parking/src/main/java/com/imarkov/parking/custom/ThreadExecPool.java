@@ -13,10 +13,6 @@ public final class ThreadExecPool {
     private static volatile ThreadExecPool instance;
     private final ThreadPoolExecutor executor;
 
-    public ThreadExecPool(ThreadPoolExecutor executor) {
-        this.executor = executor;
-    }
-
     private ThreadExecPool() {
         this.executor = new ThreadPoolExecutor(
                 CORE_POOL_SIZE,
@@ -36,7 +32,7 @@ public final class ThreadExecPool {
         if (instance == null) {
             synchronized(ThreadExecPool.class) {
                 if (instance == null) {
-                    return new ThreadExecPool();
+                    instance = new ThreadExecPool();
                 }
             }
         }
@@ -45,7 +41,15 @@ public final class ThreadExecPool {
     }
 
     public void submit(Runnable task) {
-        executor.submit(task);
+        Future<?> future = executor.submit(task);
+
+        try {
+            future.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e); // TODO: handle properly
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void shutdown() {

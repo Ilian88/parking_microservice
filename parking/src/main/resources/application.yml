@@ -7,6 +7,15 @@ spring:
     url: jdbc:postgresql://localhost:5432/parking?useSSL=false
     username: postgres
     password: 12345
+  kafka:
+    bootstrap-server: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        linger.ms: 100        # batching
+        batch.size: 16384
+        acks: 1
   security:
     oauth2:
       resourceserver:

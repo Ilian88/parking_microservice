@@ -14,10 +14,12 @@ java {
 }
 
 repositories {
+//	mavenLocal()
 	mavenCentral()
 }
 
 dependencies {
+//	implementation("com.imarkov:parking-logger:0.0.1-SNAPSHOT")
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 //	implementation("org.flywaydb:flyway-core")
@@ -25,6 +27,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.kafka:spring-kafka")
 	implementation("org.hibernate.orm:hibernate-core:6.4.4.Final")
 	implementation("org.springframework.boot:spring-boot-starter-amqp")
 	implementation("org.modelmapper:modelmapper:3.1.1")

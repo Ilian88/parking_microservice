@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import com.imarkov.parking.repo.UserRepo;
 import org.springframework.transaction.annotation.Transactional;
+//import com.imarkov.parking_logger.ParkingLogger;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
@@ -25,6 +26,7 @@ import java.util.concurrent.Executors;
 public class DBInitializer {
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Logger logger = LoggerFactory.getLogger(DBInitializer.class);
+//    private final ParkingLogger parkingLogger;
 
     private final UserRepo userRepo;
     private final VehicleRepo vehicleRepo;

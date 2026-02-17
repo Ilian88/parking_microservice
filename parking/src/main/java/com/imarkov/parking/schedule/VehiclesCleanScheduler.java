@@ -16,7 +16,6 @@ public class VehiclesCleanScheduler {
         this.vehicleCleanupService = vehicleCleanupService;
     }
 
-
 //    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     public void cleanupLeftVehicles() {
