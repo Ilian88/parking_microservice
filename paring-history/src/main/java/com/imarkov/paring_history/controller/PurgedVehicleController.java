@@ -2,7 +2,6 @@ package com.imarkov.paring_history.controller;
 
 import com.imarkov.paring_history.model.PurgedVehicleDTO;
 import com.imarkov.paring_history.service.PurgedVehicleService;
-import com.imarkov.paring_history.util.PageInfo;
 import com.imarkov.paring_history.util.PageRequestWrapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +20,13 @@ public class PurgedVehicleController {
         this.purgedVehicleService = purgedVehicleService;
     }
 
+    @PostMapping("/all/by")
+    public Flux<PurgedVehicleDTO> getAllByLicensePlate(@RequestBody PageRequestWrapper<String> pageInfo) {
+        return this.purgedVehicleService.getAllByLicensePlate(pageInfo);
+    }
+
     @PostMapping("/all")
-    public Flux<PurgedVehicleDTO> getAllPageable(@RequestBody PageRequestWrapper pageInfo) {
+    public Flux<PurgedVehicleDTO> getAllPageable(@RequestBody PageRequestWrapper<Void> pageInfo) {
         return purgedVehicleService.getAllRecords(pageInfo);
     }
 

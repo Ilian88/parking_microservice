@@ -3,7 +3,7 @@ package com.imarkov.paring_history.service;
 import com.imarkov.paring_history.model.PurgedVehicle;
 import com.imarkov.paring_history.model.PurgedVehicleDTO;
 import com.imarkov.paring_history.repo.PurgedVehicleRepository;
-import com.imarkov.paring_history.util.PageInfo;
+import com.imarkov.paring_history.util.PageRequestWrapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -29,18 +29,24 @@ public class PurgedVehicleServiceImpl implements PurgedVehicleService {
     }
 
     @Override
-    public Flux<PurgedVehicleDTO> getAllRecords(PageInfo pageInfo) {
-        String directionString = (pageInfo.direction() == null) ? "asc" : pageInfo.direction();
+    public Flux<PurgedVehicleDTO> getAllRecords(PageRequestWrapper<Void> pageRequest) {
+        String directionString = (pageRequest.getDirection() == null) ? "asc" : pageRequest.getDirection();
         Sort.Direction direction = Sort.Direction.valueOf(directionString.toUpperCase());
 
-        Pageable pageRequest = PageRequest.of(
-                pageInfo.page(),
-                pageInfo.size(),
+        Pageable pageableRequest = PageRequest.of(
+                pageRequest.getPage(),
+                pageRequest.getSize(),
                 direction,
-                pageInfo.sortBy() == null ? "licensePlate" : pageInfo.sortBy()
+                pageRequest.getSortBy() == null ? "licensePlate" : pageRequest.getSortBy()
         );
         return this.vehicleRepository
-                .findAllBy(pageRequest)
+                .findAllBy(pageableRequest)
+                .map(this::toDTO);
+    }
+
+    @Override
+    public Flux<PurgedVehicleDTO> getAllByLicensePlate(PageRequestWrapper<String> pageInfo) {
+        return this.vehicleRepository.findAllByLicensePlate(pageInfo.getPayload())
                 .map(this::toDTO);
     }
 

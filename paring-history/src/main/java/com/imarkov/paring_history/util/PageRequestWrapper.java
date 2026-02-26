@@ -1,13 +1,17 @@
 package com.imarkov.paring_history.util;
 
-public class PageRequestWrapper<T> {
-    private T payload;
-    private PageInfo pageInfo;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public PageRequestWrapper(T payload, PageInfo pageInfo) {
+public class PageRequestWrapper<T> extends PageInfo {
+    private T payload;
+
+    @JsonCreator
+    public PageRequestWrapper(@JsonProperty T payload, int page, int size, String sortBy, String direction) {
+        super(page, size, sortBy, direction);
         this.payload = payload;
-        this.pageInfo = pageInfo;
     }
+
 
     public T getPayload() {
         return payload;
@@ -15,15 +19,6 @@ public class PageRequestWrapper<T> {
 
     public PageRequestWrapper<T> setPayload(T payload) {
         this.payload = payload;
-        return this;
-    }
-
-    public PageInfo getPageInfo() {
-        return pageInfo;
-    }
-
-    public PageRequestWrapper<T> setPageInfo(PageInfo pageInfo) {
-        this.pageInfo = pageInfo;
         return this;
     }
 }
