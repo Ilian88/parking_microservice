@@ -2,12 +2,12 @@ package com.imarkov.paring_history.controller;
 
 import com.imarkov.paring_history.model.PurgedVehicleDTO;
 import com.imarkov.paring_history.service.PurgedVehicleService;
+import com.imarkov.paring_history.util.PageInfo;
+import com.imarkov.paring_history.util.PageRequestWrapper;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -19,6 +19,11 @@ public class PurgedVehicleController {
 
     public PurgedVehicleController(PurgedVehicleService purgedVehicleService) {
         this.purgedVehicleService = purgedVehicleService;
+    }
+
+    @PostMapping("/all")
+    public Flux<PurgedVehicleDTO> getAllPageable(@RequestBody PageRequestWrapper pageInfo) {
+        return purgedVehicleService.getAllRecords(pageInfo);
     }
 
     @PostMapping("/create")

@@ -23,9 +23,11 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.mapstruct:mapstruct:1.6.3")
 	implementation("org.flywaydb:flyway-core:10.14.0")
+	implementation("org.postgresql:r2dbc-postgresql")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 
-	runtimeOnly("org.postgresql:postgresql")
-	runtimeOnly("org.postgresql:r2dbc-postgresql")
+
+//	runtimeOnly("org.postgresql:postgresql")
 
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
