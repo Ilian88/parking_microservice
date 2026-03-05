@@ -1,7 +1,7 @@
 package com.imarkov.payment.service;
 
 import com.imarkov.payment.controller.PaymentController;
-import com.imarkov.payment.model.dto.PaymentRequestDTO;
+import com.imarkov.payment.model.dto.StayDetails;
 import com.imarkov.payment.service.client.PaymentCalculator;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +12,11 @@ import java.time.temporal.ChronoUnit;
 public class PaymentCalculatorImpl implements PaymentCalculator {
 
     @Override
-    public PaymentController.ResponseRecord calculate(PaymentRequestDTO paymentRequestDTO) {
-        long between = ChronoUnit.HOURS.between(paymentRequestDTO.getEnteredAt(), paymentRequestDTO.getLeftAt());
+    public PaymentController.ResponseRecord calculate(StayDetails stayDetails) {
+        long between = ChronoUnit.HOURS.between(stayDetails.getEnteredAt(), stayDetails.getLeftAt());
         BigDecimal amount = calculateEng(
-                between,
-                paymentRequestDTO.getRatePerHour());
+                between + 1,
+                stayDetails.getRatePerHour());
 
         return new PaymentController.ResponseRecord(between, amount);
     }

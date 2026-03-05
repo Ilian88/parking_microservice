@@ -30,7 +30,7 @@ spring:
       blog: DEBUG
       root: debug
 server:
-  port: 8081
+  port: 8085
   error:
     whitelabel:
       enabled: false

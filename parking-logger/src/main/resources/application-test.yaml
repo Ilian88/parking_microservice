@@ -1,0 +1,23 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+      acks: all
+
+    consumer:
+      group-id: parking-log-consumer-test
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JacksonJsonDeserializer
+      properties:
+        spring.json.value.default.type: com.imarkov.parking_logger.LogEvent
+      enable-auto-commit: false
+
+parking:
+  logger:
+    topic: parking-logs
+    consumer:
+      enabled: true

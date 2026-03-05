@@ -6,17 +6,17 @@ import com.imarkov.parking.model.dao.Vehicle;
 import java.math.BigDecimal;
 
 public class VehicleLeaveDTO extends VehicleDTO {
-    private BigDecimal paidAmount;
+    private BigDecimal amountToPay;
     private long timeSpent;
     private CurrencyEnum currency;
     private Vehicle.VehicleType vehicleType;
 
-    public BigDecimal getPaidAmount() {
-        return paidAmount;
+    public BigDecimal getAmountToPay() {
+        return amountToPay;
     }
 
-    public VehicleLeaveDTO setPaidAmount(BigDecimal paidAmount) {
-        this.paidAmount = paidAmount;
+    public VehicleLeaveDTO setAmountToPay(BigDecimal amountToPay) {
+        this.amountToPay = amountToPay;
         return this;
     }
 

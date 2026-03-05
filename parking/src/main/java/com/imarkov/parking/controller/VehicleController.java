@@ -1,11 +1,14 @@
 package com.imarkov.parking.controller;
 
 import com.imarkov.parking.exception.ApiError;
+import com.imarkov.parking.external.PaymentInfoGateAway;
+import com.imarkov.parking.model.StayDetails;
 import com.imarkov.parking.model.dao.PaymentInfoDTO;
 import com.imarkov.parking.model.dto.VehicleCreatedDTO;
 import com.imarkov.parking.model.dto.VehicleDTO;
 import com.imarkov.parking.model.dto.VehicleEnterDTO;
 import com.imarkov.parking.model.dto.VehicleGeneralDTO;
+import com.imarkov.parking.service.VehicleServiceImpl;
 import com.imarkov.parking.service.client.PurgedVehicleService;
 import com.imarkov.parking.service.client.VehicleService;
 import jakarta.validation.Valid;
@@ -54,9 +57,8 @@ public class VehicleController {
     }
 
     @PostMapping("/vehicle/leave")
-    public ResponseEntity<Void> requestLeave(@RequestParam String licensePlate) {
-        vehicleService.requestLeave(licensePlate);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<StayDetails> requestLeave(@RequestParam String licensePlate) {
+        return ResponseEntity.ok().body(vehicleService.requestLeave(licensePlate));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

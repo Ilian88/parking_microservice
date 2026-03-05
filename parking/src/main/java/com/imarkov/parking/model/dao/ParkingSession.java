@@ -2,14 +2,15 @@ package com.imarkov.parking.model.dao;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 public class ParkingSession extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime enteredAt;
-
     private LocalDateTime leftAt;
+    private BigDecimal amountToPay;
 
 //    @OneToOne
 //    @JoinColumn(name = "vehicle_id")
@@ -41,5 +42,14 @@ public class ParkingSession extends BaseEntity {
 
     public void setLeftAt(LocalDateTime leftAt) {
         this.leftAt = leftAt;
+    }
+
+    public BigDecimal getAmountToPay() {
+        return amountToPay;
+    }
+
+    public ParkingSession setAmountToPay(BigDecimal amountToPay) {
+        this.amountToPay = amountToPay;
+        return this;
     }
 }

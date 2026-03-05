@@ -48,3 +48,16 @@ spring:
       whitelabel:
         enabled: false
       path: /error
+app:
+  pricing:
+    euroCategory:
+      ONE: 5.0
+      TWO: 4.0
+      THREE: 3.0
+      FOUR: 2.0
+      FIVE: 1.50
+      SIX: 1.0
+    currency: EUR
+  capacity: 100
+  booking:
+    validity: 3

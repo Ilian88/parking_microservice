@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 
 @Service
 public class PaymentInfoGateAway {
-    private static final String GET_PAYMENT_INFO_URL = "http://localhost:8081/payment/info";
+    private static final String GET_PAYMENT_INFO_URL = "http://localhost:8085/payment/info";
     private final RestTemplate restTemplate;
 
     public PaymentInfoGateAway(RestTemplate restTemplate) {
@@ -43,11 +43,9 @@ public class PaymentInfoGateAway {
             httpHeaders.setBearerAuth(token);
         }
 
-        HttpEntity<PaymentInfoGateAway.GetPaymentInfoDTO> httpEntity = new HttpEntity<>(
-                new PaymentInfoGateAway.GetPaymentInfoDTO(vehicle.getParkingSession().getEnteredAt(), LocalDateTime.now(), 2.0),
+        return new HttpEntity<>(
+                new GetPaymentInfoDTO(vehicle.getParkingSession().getEnteredAt(), LocalDateTime.now(), 2.0),
                 httpHeaders);
-
-        return httpEntity;
     }
 
     public record GetPaymentInfoDTO(LocalDateTime enteredAt, LocalDateTime leftAt, double ratePerHour){}

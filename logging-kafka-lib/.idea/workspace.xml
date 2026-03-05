@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c42cab4e-86a2-473c-9d9e-8d1163e052bc" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/logging/kafka/lib/log/KafkaProducer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/logging/kafka/lib/log/LogBuffer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/logging/kafka/lib/log/LogEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/logging/kafka/lib/log/LogFlushScheduler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/logging/kafka/lib/log/ParkingLogger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../parking/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/../parking/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../parking/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../parking/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/controller/PaymentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/model/dto/PaymentRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/model/dto/StayDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/service/PaymentCalculatorImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/service/PaymentCalculatorImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/service/PaymentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/service/PaymentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/service/client/PaymentCalculator.java" beforeDir="false" afterPath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/service/client/PaymentCalculator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/service/client/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../payment/src/main/java/com/imarkov/payment/service/client/PaymentService.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="logging-kafka-lib" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="logging-kafka-lib" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="logging-kafka-lib" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GradleScriptDefinitionsStorage" workingDir="$PROJECT_DIR$" gradleHome="C:\Users\ilian\.gradle\wrapper\dists\gradle-7.6-bin\9l9tetv7ltxvx3i8an4pb86ye\gradle-7.6" javaHome="C:\Program Files\Java\jdk-17.0.5" gradleVersion="7.6" />
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="380oNUvRPl5gLCbynqjTUaIXmRI" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.logging-kafka-lib [:lib:build].executor": "Run",
+    "Gradle.logging-kafka-lib [build].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "develop",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/projects/parking_microservice/logging-kafka-lib/lib/src/main/java/logging/kafka/lib",
+    "settings.editor.selected.configurable": "reference.projectsettings.compiler.annotationProcessors"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\projects\parking_microservice\logging-kafka-lib\lib\src\main\java\logging\kafka\lib" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\projects\parking_microservice\logging-kafka-lib" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="logging.kafka.lib.log" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Gradle.logging-kafka-lib [build]">
+    <configuration name="logging-kafka-lib [:lib:build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":lib:build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="logging-kafka-lib [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="logging-kafka-lib" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="logging-kafka-lib" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.logging-kafka-lib [build]" />
+        <item itemvalue="Gradle.logging-kafka-lib [:lib:build]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c42cab4e-86a2-473c-9d9e-8d1163e052bc" name="Changes" comment="" />
+      <created>1767945809397</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1767945809397</updated>
+    </task>
+    <servers />
+  </component>
+</project>
