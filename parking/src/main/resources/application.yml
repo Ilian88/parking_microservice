@@ -48,6 +48,10 @@ spring:
       whitelabel:
         enabled: false
       path: /error
+identity-provider:
+  client-id: pci_cli_id
+  client-secret: very_secret_big
+  token-uri: http://localhost:9000/oauth2/token
 app:
   pricing:
     euroCategory:

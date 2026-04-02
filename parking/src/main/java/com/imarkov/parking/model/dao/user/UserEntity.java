@@ -7,6 +7,10 @@ import jakarta.persistence.*;
 public class UserEntity extends BaseEntity {
     private String username;
     private String encPassword;
+    private String accountType;
+    private String email;
+    private String phone;
+    private String companyName;
     private Role role;
 
     @Column(nullable = false, unique = true)
@@ -34,6 +38,45 @@ public class UserEntity extends BaseEntity {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Column(nullable = false)
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public UserEntity setAccountType(String accountType) {
+        this.accountType = accountType;
+        return this;
+    }
+    @Column
+    public String getEmail() {
+        return email;
+    }
+
+    public UserEntity setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    @Column
+    public String getPhone() {
+        return phone;
+    }
+
+    public UserEntity setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    @Column
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public UserEntity setCompanyName(String companyName) {
+        this.companyName = companyName;
+        return this;
     }
 
     @Override

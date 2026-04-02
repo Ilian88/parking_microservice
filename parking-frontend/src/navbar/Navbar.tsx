@@ -6,6 +6,7 @@ import { useState } from 'react'
 const links = [
   { to: '/', label: 'Home' },
   { to: '/pricing', label: 'Pricing' },
+  { to: '/book', label: 'Book' },
 ]
 
 export default function Navbar() {
