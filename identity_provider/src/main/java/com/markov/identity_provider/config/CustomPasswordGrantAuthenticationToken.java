@@ -1,8 +1,8 @@
 package com.markov.identity_provider.config;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-
 
 public class CustomPasswordGrantAuthenticationToken extends AbstractAuthenticationToken {
     private final String username;

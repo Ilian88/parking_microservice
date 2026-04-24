@@ -6,8 +6,8 @@ import jakarta.persistence.*;
 @Entity
 public class UserEntity extends BaseEntity {
     private String username;
-    private String encPassword;
-    private String accountType;
+    private String password;
+    private AccountType accountType;
     private String email;
     private String phone;
     private String companyName;
@@ -18,17 +18,19 @@ public class UserEntity extends BaseEntity {
         return username;
     }
 
-    public void setUsername(String username) {
+    public UserEntity setUsername(String username) {
         this.username = username;
+        return this;
     }
 
     @Column(nullable = false)
-    public String getEncPassword() {
-        return encPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setEncPassword(String encPassword) {
-        this.encPassword = encPassword;
+    public UserEntity setPassword(String password) {
+        this.password = password;
+        return this;
     }
 
     @Enumerated(EnumType.STRING)
@@ -36,16 +38,17 @@ public class UserEntity extends BaseEntity {
         return role;
     }
 
-    public void setRole(Role role) {
+    public UserEntity setRole(Role role) {
         this.role = role;
+        return this;
     }
 
-    @Column(nullable = false)
-    public String getAccountType() {
+    @Enumerated(EnumType.STRING)
+    public AccountType getAccountType() {
         return accountType;
     }
 
-    public UserEntity setAccountType(String accountType) {
+    public UserEntity setAccountType(AccountType accountType) {
         this.accountType = accountType;
         return this;
     }
@@ -77,14 +80,5 @@ public class UserEntity extends BaseEntity {
     public UserEntity setCompanyName(String companyName) {
         this.companyName = companyName;
         return this;
-    }
-
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "username='" + username + '\'' +
-                ", encPassword='" + "*******" + '\'' +
-                ", role=" + role.toString() +
-                '}';
     }
 }

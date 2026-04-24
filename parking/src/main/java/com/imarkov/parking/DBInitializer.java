@@ -45,7 +45,7 @@ public class DBInitializer {
             if (!userRepo.existsByUsername("ilian88").get()) {
                 UserEntity user = new UserEntity();
                 user.setUsername("ilian88");
-                user.setEncPassword(passwordEncoder.encode("12345"));
+                user.setPassword(passwordEncoder.encode("12345"));
                 user.setRole(Role.ADMIN);
 
                 try {

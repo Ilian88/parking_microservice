@@ -3,7 +3,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CustomPasswordGrantConverter implements AuthenticationConverter {
 
     @Override

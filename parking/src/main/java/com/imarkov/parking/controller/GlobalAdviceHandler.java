@@ -1,8 +1,10 @@
 package com.imarkov.parking.controller;
 
 import com.imarkov.parking.exception.ApiError;
+import com.imarkov.parking.exception.AuthException;
 import com.imarkov.parking.exception.NoSuchVehicleException;
 import com.imarkov.parking.exception.VehicleAlreadyExistsException;
+import jakarta.annotation.Nonnull;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +22,7 @@ public class GlobalAdviceHandler {
 
     @ExceptionHandler(value = {NoSuchVehicleException.class, VehicleAlreadyExistsException.class})
     public ResponseEntity<ApiError> handleVehicleException(Exception ex) {
-        return ResponseEntity.badRequest().body(
-                new ApiError(
-                        LocalDateTime.now(),
-                        HttpStatus.BAD_REQUEST.value(),
-                        ex.getMessage()
-                )
-        );
+        return badRequest(ex.getMessage());
     }
 
     @ExceptionHandler({ValidationException.class, MethodArgumentNotValidException.class})
@@ -37,20 +33,23 @@ public class GlobalAdviceHandler {
             List<String> errors = methodArgumentNotValidException.getBindingResult().getFieldErrors().stream().map(FieldError::getDefaultMessage)
                     .toList();
 
-            return ResponseEntity.badRequest().body(
-                    new ApiError(
-                            LocalDateTime.now(),
-                            HttpStatus.BAD_REQUEST.value(),
-                            String.join(" ---- ", errors)
-                    )
-            );
+            return badRequest(String.join(" ---- ", errors));
         }
 
+        return badRequest(ex.getMessage());
+    }
+
+    @ExceptionHandler(value = {AuthException.class})
+    public ResponseEntity<ApiError> handleAuthException(Exception ex) {
+        return badRequest(ex.getMessage());
+    }
+
+    private ResponseEntity<ApiError> badRequest(String ex) {
         return ResponseEntity.badRequest().body(
                 new ApiError(
                         LocalDateTime.now(),
                         HttpStatus.BAD_REQUEST.value(),
-                        ex.getMessage()
+                        ex
                 )
         );
     }

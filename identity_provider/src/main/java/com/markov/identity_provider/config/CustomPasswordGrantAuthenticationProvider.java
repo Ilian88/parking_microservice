@@ -52,10 +52,16 @@ public class CustomPasswordGrantAuthenticationProvider implements Authentication
                 .registeredClient(registeredClient)
                 .principal(usernamePasswordAuthenticationToken)
                 .authorizationServerContext(AuthorizationServerContextHolder.getContext())
+                .tokenType(OAuth2TokenType.ACCESS_TOKEN)
+                .authorizationGrantType(new AuthorizationGrantType("urn:custom:password")) // добави това
                 .authorizedScopes(registeredClient.getScopes())
                 .build();
 
         OAuth2Token generatedToken = tokenGenerator.generate(tokenContext);
+
+        if (generatedToken == null) {
+            throw new RuntimeException("Failed to generate token");
+        }
 
         OAuth2AccessToken accessToken = new OAuth2AccessToken(
                 OAuth2AccessToken.TokenType.BEARER,

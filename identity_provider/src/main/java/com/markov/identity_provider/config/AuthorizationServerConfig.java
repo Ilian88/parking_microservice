@@ -51,9 +51,17 @@ public class AuthorizationServerConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http,
+                                                                      CustomPasswordGrantConverter converter,
+                                                                      CustomPasswordGrantAuthenticationProvider provider) throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
                 OAuth2AuthorizationServerConfigurer.authorizationServer();
+
+        authorizationServerConfigurer
+                .tokenEndpoint(tokenEndpoint -> tokenEndpoint
+                        .accessTokenRequestConverter(converter)
+                        .authenticationProvider(provider)
+                );
 
         http
                 .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
