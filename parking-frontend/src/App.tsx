@@ -5,16 +5,18 @@ import Login from './auth/Login'
 import Register from './auth/Register'
 import Book from './home/Book'
 import MyBookings from './home/MyBookings'
+import AdminPage from './admin/AdminPage'
 
 function App() {
   return (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route path="/"          element={<Home />}     />
-        <Route path="/login"     element={<Login />}    />
-        <Route path="/register"  element={<Register />} />
-        <Route path="/book"      element={<Book />} />
+        <Route path="/"                 element={<Home />}     />
+        <Route path="/login"            element={<Login />}    />
+        <Route path="/register"         element={<Register />} />
+        <Route path="/book"             element={<Book />} />
         <Route path="/my-bookings"      element={<MyBookings />} />
+        <Route path="/admin"            element={<AdminPage />} />
       </Route>
     </Routes>
   )

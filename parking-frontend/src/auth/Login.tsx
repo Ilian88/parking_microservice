@@ -1,12 +1,15 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { login, type User } from '../store/userSlice'
 
 type FormData = {
   username: string
   password: string
 }
 
-type FormErrors = Partial<Record<keyof FormData, string>>
+type FormErrors = Partial<Record<string, string>>
 
 function validate(form: FormData): FormErrors {
   const errors: FormErrors = {}
@@ -52,18 +55,39 @@ export default function Login() {
   const [form, setForm]     = useState<FormData>({ username: '', password: '' })
   const [errors, setErrors] = useState<FormErrors>({})
   const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const set = (key: keyof FormData) => (val: string) =>
     setForm(prev => ({ ...prev, [key]: val }))
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const errs = validate(form)
     setErrors(errs)
     if (Object.keys(errs).length > 0) return
-
+    
     setLoading(true)
-    // replace with real auth call
+    try {
+      const loginResponse = await fetch("http://localhost:8080/users/login", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({username: form.username, password: form.password})
+      })
+
+      const data = await loginResponse.json();
+      dispatch(login({username: form.username, accessToken: data.accessToken} as User))
+      
+      
+    } catch(e) {
+      setErrors({login: `Login Failed: ${e}`})
+      return
+    } finally {
+      setLoading(false)
+    }
+
     setTimeout(() => setLoading(false), 1500)
+
+    navigate('/book')
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

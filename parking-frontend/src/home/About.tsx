@@ -65,7 +65,7 @@ export default function About() {
           contactless entry. Register once, park forever without friction.
         </p>
 
-        <div className={`${fu('delay-[420ms]')} flex gap-3 flex-wrap`}>
+         <div className={`${fu('delay-[420ms]')} flex gap-3 flex-wrap`}>
           <Link
             to="/register"
             className="inline-block bg-[#1a1a18] text-[#f7f6f2] no-underline px-9 py-4 rounded-sm text-sm font-medium tracking-wide hover:bg-[#333330] hover:-translate-y-px transition-all"

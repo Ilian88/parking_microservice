@@ -1,4 +1,5 @@
 import Button from '../shared/Button.tsx'
+import type { User } from '../store/userSlice.ts'
 
 function Avatar({ name }: {name: string}) {
   return (
@@ -12,7 +13,7 @@ function Avatar({ name }: {name: string}) {
 }
 
 type NavAuthProps = {
-  user: {name: string} | null,
+  user: User
   onLogout: ()=> void
 }
 
@@ -20,7 +21,7 @@ export default function NavAuth({ user, onLogout }: NavAuthProps) {
 
   if (user) return (
     <div className="flex items-center gap-3">
-      <Avatar name={user.name} />
+      <Avatar name={user.username} />
       <div className="w-px h-5 bg-gray-200" />
       <Button variant="ghost" onClick={onLogout}>Log out</Button>
     </div>

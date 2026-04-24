@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 type AccountType = 'person' | 'company'
 
@@ -13,7 +13,7 @@ type FormData = {
   companyName: string
 }
 
-type FormErrors = Partial<Record<keyof FormData, string>>
+type FormErrors = Partial<Record<string, string>>
 
 const initialForm: FormData = {
   accountType: 'person',
@@ -74,14 +74,38 @@ export default function Register() {
   const [form, setForm]       = useState<FormData>(initialForm)
   const [errors, setErrors]   = useState<FormErrors>({})
   const [submitted, setSubmitted] = useState(false)
+  const navigate = useNavigate() 
 
   const set = (key: keyof FormData) => (val: string) =>
     setForm(prev => ({ ...prev, [key]: val }))
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const errs = validate(form)
     setErrors(errs)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const {confirmPassword: _ , ...formToSend } = form;
+
+    const regBody = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json'},
+      body: JSON.stringify({...formToSend}) 
+    }
+
+    try {
+      const regResponse = await fetch("http://localhost:8080/users/register", regBody)
+      const status = await regResponse.status;
+
+      if (status !== 201) {
+        throw new Error(`Failed to register user: ${form.username}`)
+      }
+
+    } catch (e) {
+      setErrors({register: `Register  Failed: ${e}`})
+      return
+    }
+    
     if (Object.keys(errs).length === 0) setSubmitted(true)
+    navigate('/login')
   }
 
   if (submitted) {

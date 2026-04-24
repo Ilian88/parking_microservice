@@ -105,13 +105,25 @@ function VehicleIcon({ type }: { type: 'car' | 'truck' }) {
 
 type Filter = 'all' | BookingStatus
 
+const PAGE_SIZE = 4
+
 export default function MyBookings() {
   const [bookings, setBookings]         = useState<Booking[]>(mockBookings)
   const [filter, setFilter]             = useState<Filter>('all')
   const [expandedId, setExpandedId]     = useState<string | null>(null)
   const [cancellingId, setCancellingId] = useState<string | null>(null)
+  const [page, setPage]                 = useState<number>(1)
 
   const filtered = filter === 'all' ? bookings : bookings.filter(b => b.status === filter)
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
+  const paginated  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  const handleFilterChange = (f: Filter) => {
+    setFilter(f)
+    setPage(1)
+    setExpandedId(null)
+  }
 
   const handleCancel = (id: string) => {
     setBookings(prev => prev.map(b => b.id === id ? { ...b, status: 'cancelled' } : b))
@@ -146,7 +158,7 @@ export default function MyBookings() {
           {(['all', 'active', 'completed', 'cancelled'] as Filter[]).map(f => (
             <button
               key={f}
-              onClick={() => setFilter(f)}
+              onClick={() => handleFilterChange(f)}
               className={`px-4 py-2.5 text-[13px] font-medium capitalize transition-colors border-b-2 -mb-px
                 ${filter === f
                   ? 'border-[#1a1a18] text-[#1a1a18]'
@@ -164,140 +176,176 @@ export default function MyBookings() {
             No bookings found.
           </div>
         ) : (
-          <div className="relative">
-            {/* vertical line */}
-            <div className="absolute left-[7px] top-2 bottom-2 w-px bg-[#1a1a18]/10" />
+          <>
+            <div className="relative">
+              {/* vertical line */}
+              <div className="absolute left-[7px] top-2 bottom-2 w-px bg-[#1a1a18]/10" />
 
-            <div className="flex flex-col gap-0">
-              {filtered.map((booking, i) => {
-                const st        = statusConfig[booking.status]
-                const isExpanded = expandedId === booking.id
-                const isConfirmingCancel = cancellingId === booking.id
+              <div className="flex flex-col gap-0">
+                {paginated.map((booking, i) => {
+                  const st = statusConfig[booking.status]
+                  const isExpanded = expandedId === booking.id
+                  const isConfirmingCancel = cancellingId === booking.id
 
-                return (
-                  <div key={booking.id} className="relative pl-10 pb-8">
+                  // date label: show when date changes relative to paginated list
+                  const prevBooking = paginated[i - 1]
+                  const showDate = i === 0 || formatDate(prevBooking.dateIn) !== formatDate(booking.dateIn)
 
-                    {/* timeline dot */}
-                    <div className={`absolute left-0 top-1.5 w-[15px] h-[15px] rounded-full border-2 border-[#f7f6f2] ${st.dot} z-10`} />
+                  return (
+                    <div key={booking.id} className="relative pl-10 pb-8">
 
-                    {/* date label — show on first item or when date changes */}
-                    {(i === 0 || formatDate(filtered[i - 1].dateIn) !== formatDate(booking.dateIn)) && (
-                      <p className="text-[11px] tracking-[0.12em] uppercase text-[#1a1a18]/35 font-medium mb-3">
-                        {formatDate(booking.dateIn)}
-                      </p>
-                    )}
+                      {/* timeline dot */}
+                      <div className={`absolute left-0 top-1.5 w-[15px] h-[15px] rounded-full border-2 border-[#f7f6f2] ${st.dot} z-10`} />
 
-                    {/* card */}
-                    <div className={`bg-white border border-[#1a1a18]/10 rounded-lg overflow-hidden transition-all`}>
-
-                      {/* card header */}
-                      <div
-                        className="px-5 py-4 flex items-center justify-between cursor-pointer hover:bg-[#1a1a18]/[0.02] transition-colors"
-                        onClick={() => setExpandedId(isExpanded ? null : booking.id)}
-                      >
-                        <div className="flex items-center gap-4">
-                          {/* spot */}
-                          <div className="text-center">
-                            <div className="font-serif text-[22px] font-bold leading-none tracking-tight">{booking.spot}</div>
-                            <div className="text-[11px] text-[#1a1a18]/35 mt-0.5">{booking.floor}</div>
-                          </div>
-
-                          <div className="w-px h-8 bg-[#1a1a18]/10" />
-
-                          {/* time */}
-                          <div>
-                            <div className="text-[14px] font-medium text-[#1a1a18]">
-                              {formatTime(booking.dateIn)} — {formatTime(booking.dateOut)}
-                            </div>
-                            <div className="flex items-center gap-1.5 mt-0.5 text-[#1a1a18]/45">
-                              <VehicleIcon type={booking.vehicle.type} />
-                              <span className="text-[13px] font-light">{booking.vehicle.plate}</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          {/* price */}
-                          <span className="font-serif text-[18px] font-bold tracking-tight">
-                            €{booking.price.toFixed(2)}
-                          </span>
-
-                          {/* status badge */}
-                          <span className={`text-[11px] font-medium px-2.5 py-1 rounded-sm ${st.bg} ${st.text}`}>
-                            {st.label}
-                          </span>
-
-                          {/* chevron */}
-                          <svg
-                            width="14" height="14" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                            className={`text-[#1a1a18]/30 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                          >
-                            <polyline points="6 9 12 15 18 9" />
-                          </svg>
-                        </div>
-                      </div>
-
-                      {/* expanded details */}
-                      {isExpanded && (
-                        <div className="border-t border-[#1a1a18]/08 px-5 py-4 bg-[#f7f6f2]/60">
-                          <div className="grid grid-cols-2 gap-x-8 gap-y-3 mb-4">
-                            {[
-                              { label: 'Booking ID',  value: booking.id                                     },
-                              { label: 'Spot',        value: `${booking.spot} — ${booking.floor}`           },
-                              { label: 'Check in',    value: `${formatDate(booking.dateIn)} ${formatTime(booking.dateIn)}`   },
-                              { label: 'Check out',   value: `${formatDate(booking.dateOut)} ${formatTime(booking.dateOut)}` },
-                              { label: 'Vehicle',     value: `${booking.vehicle.make} ${booking.vehicle.model}` },
-                              { label: 'Plate',       value: booking.vehicle.plate                          },
-                              { label: 'Type',        value: booking.vehicle.type === 'car' ? 'Car' : 'Truck' },
-                              { label: 'Total price', value: `€${booking.price.toFixed(2)}`                 },
-                            ].map(({ label, value }) => (
-                              <div key={label}>
-                                <p className="text-[11px] text-[#1a1a18]/35 uppercase tracking-wide font-medium mb-0.5">{label}</p>
-                                <p className="text-[14px] font-light text-[#1a1a18]">{value}</p>
-                              </div>
-                            ))}
-                          </div>
-
-                          {/* cancel action */}
-                          {booking.status === 'active' && (
-                            <div className="border-t border-[#1a1a18]/08 pt-4">
-                              {isConfirmingCancel ? (
-                                <div className="flex items-center gap-3">
-                                  <p className="text-[13px] text-[#1a1a18]/60 font-light flex-1">
-                                    Are you sure you want to cancel this booking?
-                                  </p>
-                                  <button
-                                    onClick={() => setCancellingId(null)}
-                                    className="text-[13px] px-4 py-2 border border-[#1a1a18]/15 rounded-sm hover:bg-[#1a1a18]/05 transition-colors"
-                                  >
-                                    Keep it
-                                  </button>
-                                  <button
-                                    onClick={() => handleCancel(booking.id)}
-                                    className="text-[13px] px-4 py-2 bg-red-500 text-white rounded-sm hover:bg-red-600 transition-colors"
-                                  >
-                                    Yes, cancel
-                                  </button>
-                                </div>
-                              ) : (
-                                <button
-                                  onClick={() => setCancellingId(booking.id)}
-                                  className="text-[13px] text-red-500 hover:text-red-700 font-medium transition-colors"
-                                >
-                                  Cancel booking
-                                </button>
-                              )}
-                            </div>
-                          )}
-                        </div>
+                      {/* date label */}
+                      {showDate && (
+                        <p className="text-[11px] tracking-[0.12em] uppercase text-[#1a1a18]/35 font-medium mb-3">
+                          {formatDate(booking.dateIn)}
+                        </p>
                       )}
+
+                      {/* card */}
+                      <div className="bg-white border border-[#1a1a18]/10 rounded-lg overflow-hidden transition-all">
+
+                        {/* card header */}
+                        <div
+                          className="px-5 py-4 flex items-center justify-between cursor-pointer hover:bg-[#1a1a18]/[0.02] transition-colors"
+                          onClick={() => setExpandedId(isExpanded ? null : booking.id)}
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="text-center">
+                              <div className="font-serif text-[22px] font-bold leading-none tracking-tight">{booking.spot}</div>
+                              <div className="text-[11px] text-[#1a1a18]/35 mt-0.5">{booking.floor}</div>
+                            </div>
+
+                            <div className="w-px h-8 bg-[#1a1a18]/10" />
+
+                            <div>
+                              <div className="text-[14px] font-medium text-[#1a1a18]">
+                                {formatTime(booking.dateIn)} — {formatTime(booking.dateOut)}
+                              </div>
+                              <div className="flex items-center gap-1.5 mt-0.5 text-[#1a1a18]/45">
+                                <VehicleIcon type={booking.vehicle.type} />
+                                <span className="text-[13px] font-light">{booking.vehicle.plate}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <span className="font-serif text-[18px] font-bold tracking-tight">
+                              €{booking.price.toFixed(2)}
+                            </span>
+                            <span className={`text-[11px] font-medium px-2.5 py-1 rounded-sm ${st.bg} ${st.text}`}>
+                              {st.label}
+                            </span>
+                            <svg
+                              width="14" height="14" viewBox="0 0 24 24" fill="none"
+                              stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                              className={`text-[#1a1a18]/30 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                            >
+                              <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                          </div>
+                        </div>
+
+                        {/* expanded details */}
+                        {isExpanded && (
+                          <div className="border-t border-[#1a1a18]/08 px-5 py-4 bg-[#f7f6f2]/60">
+                            <div className="grid grid-cols-2 gap-x-8 gap-y-3 mb-4">
+                              {[
+                                { label: 'Booking ID',  value: booking.id },
+                                { label: 'Spot',        value: `${booking.spot} — ${booking.floor}` },
+                                { label: 'Check in',    value: `${formatDate(booking.dateIn)} ${formatTime(booking.dateIn)}` },
+                                { label: 'Check out',   value: `${formatDate(booking.dateOut)} ${formatTime(booking.dateOut)}` },
+                                { label: 'Vehicle',     value: `${booking.vehicle.make} ${booking.vehicle.model}` },
+                                { label: 'Plate',       value: booking.vehicle.plate },
+                                { label: 'Type',        value: booking.vehicle.type === 'car' ? 'Car' : 'Truck' },
+                                { label: 'Total price', value: `€${booking.price.toFixed(2)}` },
+                              ].map(({ label, value }) => (
+                                <div key={label}>
+                                  <p className="text-[11px] text-[#1a1a18]/35 uppercase tracking-wide font-medium mb-0.5">{label}</p>
+                                  <p className="text-[14px] font-light text-[#1a1a18]">{value}</p>
+                                </div>
+                              ))}
+                            </div>
+
+                            {booking.status === 'active' && (
+                              <div className="border-t border-[#1a1a18]/08 pt-4">
+                                {isConfirmingCancel ? (
+                                  <div className="flex items-center gap-3">
+                                    <p className="text-[13px] text-[#1a1a18]/60 font-light flex-1">
+                                      Are you sure you want to cancel this booking?
+                                    </p>
+                                    <button
+                                      onClick={() => setCancellingId(null)}
+                                      className="text-[13px] px-4 py-2 border border-[#1a1a18]/15 rounded-sm hover:bg-[#1a1a18]/05 transition-colors"
+                                    >
+                                      Keep it
+                                    </button>
+                                    <button
+                                      onClick={() => handleCancel(booking.id)}
+                                      className="text-[13px] px-4 py-2 bg-red-500 text-white rounded-sm hover:bg-red-600 transition-colors"
+                                    >
+                                      Yes, cancel
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    onClick={() => setCancellingId(booking.id)}
+                                    className="text-[13px] text-red-500 hover:text-red-700 font-medium transition-colors"
+                                  >
+                                    Cancel booking
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )
-              })}
+                  )
+                })}
+              </div>
             </div>
-          </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-2 pt-6 border-t border-[#1a1a18]/10">
+                <span className="text-[13px] text-[#1a1a18]/40 font-light">
+                  {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                    className="px-3 py-1.5 text-[13px] border border-[#1a1a18]/15 rounded-sm disabled:opacity-30 disabled:cursor-default hover:bg-[#1a1a18]/05 transition-colors"
+                  >
+                    ← Prev
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                    <button
+                      key={p}
+                      onClick={() => setPage(p)}
+                      className={`w-8 h-8 text-[13px] rounded-sm transition-colors
+                        ${page === p
+                          ? 'bg-[#1a1a18] text-[#f7f6f2]'
+                          : 'hover:bg-[#1a1a18]/05 text-[#1a1a18]/50'
+                        }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages}
+                    className="px-3 py-1.5 text-[13px] border border-[#1a1a18]/15 rounded-sm disabled:opacity-30 disabled:cursor-default hover:bg-[#1a1a18]/05 transition-colors"
+                  >
+                    Next →
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
