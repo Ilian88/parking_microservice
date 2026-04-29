@@ -1,7 +1,10 @@
 import { useState } from "react";
+import ParkingSpotDetails from "./ParkingSpotDetails";
+import { styles } from "./styles";
+import SpotCard from "./SpotsCard";
 
-type VehicleType = "car" | "truck";
-type SpotStatus = "occupied" | "free" | "reserved" | "booked";
+export type VehicleType = "car" | "truck";
+export type SpotStatus = "occupied" | "free" | "reserved" | "booked";
 
 interface Vehicle {
   plate: string;
@@ -11,7 +14,7 @@ interface Vehicle {
   until: string;
 }
 
-interface ParkingSpot {
+export interface ParkingSpot {
   id: string;
   floor: string;
   status: SpotStatus;
@@ -19,7 +22,7 @@ interface ParkingSpot {
   revenue: number;
 }
 
-interface StatusStyle {
+export interface StatusStyle {
   dot: string;
   label: string;
   bg: string;
@@ -47,36 +50,40 @@ const statusColor: Record<SpotStatus, StatusStyle> = {
   booked: { dot: "#4a6fa5", label: "#4a6fa5", bg: "#eef2f8" },
 };
 
-const VehicleIcon = ({ type }: { type: VehicleType }) =>
-  type === "truck" ? (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <rect x="1" y="8" width="14" height="10" rx="1" />
-      <path d="M15 12h4l3 3v3h-7V12z" />
-      <circle cx="5" cy="19" r="2" />
-      <circle cx="18" cy="19" r="2" />
-    </svg>
-  ) : (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <path d="M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v9a2 2 0 01-2 2h-2" />
-      <circle cx="9" cy="17" r="2" />
-      <circle cx="17" cy="17" r="2" />
-    </svg>
-  );
-
-interface DetailRowProps {
-  label: string;
-  value: string;
-  capitalize?: boolean;
-}
-
-const DetailRow = ({ label, value, capitalize = false }: DetailRowProps) => (
-  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-    <span style={{ fontSize: 13, color: "#888" }}>{label}</span>
-    <span style={{ fontSize: 13, fontWeight: 500, textTransform: capitalize ? "capitalize" : "none" }}>{value}</span>
-  </div>
-);
 
 const PAGE_SIZE = 5;
+
+function Header() {
+  return (
+    <div style={{ marginBottom: 32 }}>
+      <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 40, fontWeight: 600, lineHeight: 1.1 }}>Admin overview</h1>
+      <p style={{ color: "#888", fontSize: 14, marginTop: 6 }}>Real-time parking occupancy and vehicle details.</p>
+    </div>
+  )
+}
+
+function Stats({totalRevenue, occupiedCount, freeCount, length}: {
+  totalRevenue: number,
+  occupiedCount: number, 
+  freeCount: number,
+  length: number
+}) {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 36 }}>
+          {[
+            { label: "Total spots", value: length.toString(), accent: "#1a1a1a" },
+            { label: "Occupied", value: occupiedCount.toString(), accent: "#2d6a4f" },
+            { label: "Free", value: freeCount.toString(), accent: "#adb5bd" },
+            { label: "Today's revenue", value: `€${totalRevenue.toFixed(2)}`, accent: "#c9841a" },
+          ].map((s) => (
+            <div key={s.label} className="stat-card">
+              <div style={{ fontSize: 28, fontFamily: "'Fraunces', serif", fontWeight: 600, color: s.accent }}>{s.value}</div>
+              <div style={{ fontSize: 13, color: "#888", marginTop: 4 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+  )
+}
 
 export default function AdminPage() {
   const [selectedFloor, setSelectedFloor] = useState<string>("All");
@@ -109,49 +116,18 @@ export default function AdminPage() {
     setSelected((prev) => (prev?.id === spot.id ? null : spot));
   };
 
-  const handleRelease = (spotId: string) => {
-    alert(`Releasing spot ${spotId}...`);
-  };
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", background: "#f2ede8", minHeight: "100vh", color: "#1a1a1a" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        .spot-card { transition: box-shadow 0.15s, transform 0.15s; cursor: pointer; }
-        .spot-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10); transform: translateY(-1px); }
-        .spot-card.active-card { box-shadow: 0 0 0 2px #1a1a1a; }
-        .filter-btn { background: none; border: 1px solid #d5cfc8; border-radius: 20px; padding: 5px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; }
-        .filter-btn:hover { background: #e8e2db; }
-        .filter-btn.active-btn { background: #1a1a1a; color: #f2ede8; border-color: #1a1a1a; }
-        .stat-card { background: white; border-radius: 12px; padding: 20px 24px; }
-        .detail-panel { background: white; border-radius: 14px; padding: 28px; position: sticky; top: 24px; }
-        .release-btn { width: 100%; background: #1a1a1a; color: #f2ede8; border: none; border-radius: 8px; padding: 12px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; }
-        .release-btn:hover { opacity: 0.85; }
-      `}</style>
+      <style>{styles}</style>
 
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "40px 24px" }}>
 
         {/* Header */}
-        <div style={{ marginBottom: 32 }}>
-          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 40, fontWeight: 600, lineHeight: 1.1 }}>Admin overview</h1>
-          <p style={{ color: "#888", fontSize: 14, marginTop: 6 }}>Real-time parking occupancy and vehicle details.</p>
-        </div>
+        <Header/>
 
         {/* Stats */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 36 }}>
-          {[
-            { label: "Total spots", value: mockSpots.length.toString(), accent: "#1a1a1a" },
-            { label: "Occupied", value: occupiedCount.toString(), accent: "#2d6a4f" },
-            { label: "Free", value: freeCount.toString(), accent: "#adb5bd" },
-            { label: "Today's revenue", value: `€${totalRevenue.toFixed(2)}`, accent: "#c9841a" },
-          ].map((s) => (
-            <div key={s.label} className="stat-card">
-              <div style={{ fontSize: 28, fontFamily: "'Fraunces', serif", fontWeight: 600, color: s.accent }}>{s.value}</div>
-              <div style={{ fontSize: 13, color: "#888", marginTop: 4 }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
+        <Stats  totalRevenue={totalRevenue} occupiedCount={occupiedCount}  freeCount={freeCount} length={mockSpots.length}/>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 24, alignItems: "start" }}>
 
@@ -178,36 +154,7 @@ export default function AdminPage() {
                 const sc = statusColor[spot.status];
                 const isSelected = selected?.id === spot.id;
                 return (
-                  <div
-                    key={spot.id}
-                    className={`spot-card ${isSelected ? "active-card" : ""}`}
-                    onClick={() => handleSpotClick(spot)}
-                    style={{ background: "white", borderRadius: 12, padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                      <div style={{ width: 8, height: 8, borderRadius: "50%", background: sc.dot, flexShrink: 0 }} />
-                      <div>
-                        <div style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 600, letterSpacing: "-0.5px" }}>{spot.id}</div>
-                        <div style={{ fontSize: 12, color: "#888", marginTop: 1 }}>{spot.floor}</div>
-                      </div>
-                      {spot.vehicle && (
-                        <div style={{ marginLeft: 8, display: "flex", alignItems: "center", gap: 6, color: "#555", fontSize: 13 }}>
-                          <VehicleIcon type={spot.vehicle.type} />
-                          <span>{spot.vehicle.plate}</span>
-                          <span style={{ color: "#bbb" }}>·</span>
-                          <span>{spot.vehicle.since} — {spot.vehicle.until}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                      {spot.revenue > 0 && (
-                        <span style={{ fontFamily: "'Fraunces', serif", fontSize: 16 }}>€{spot.revenue.toFixed(2)}</span>
-                      )}
-                      <span style={{ fontSize: 12, color: sc.label, background: sc.bg, padding: "3px 10px", borderRadius: 20, textTransform: "capitalize" }}>
-                        {spot.status}
-                      </span>
-                    </div>
-                  </div>
+                  <SpotCard key={spot.id} spot={spot} handleSpotClick={handleSpotClick} isSelected={isSelected} sc={sc}/>
                 );
               })}
             </div>
@@ -251,60 +198,7 @@ export default function AdminPage() {
 
           {/* Right — detail panel */}
           <div className="detail-panel">
-            {selected ? (
-              <>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
-                  <div>
-                    <div style={{ fontFamily: "'Fraunces', serif", fontSize: 32, fontWeight: 600 }}>{selected.id}</div>
-                    <div style={{ fontSize: 13, color: "#888" }}>{selected.floor}</div>
-                  </div>
-                  <span style={{ fontSize: 12, color: statusColor[selected.status].label, background: statusColor[selected.status].bg, padding: "4px 12px", borderRadius: 20, textTransform: "capitalize" }}>
-                    {selected.status}
-                  </span>
-                </div>
-
-                {selected.vehicle ? (
-                  <>
-                    <div style={{ borderTop: "1px solid #eee", paddingTop: 20, display: "flex", flexDirection: "column", gap: 16 }}>
-                      <DetailRow label="License plate" value={selected.vehicle.plate} />
-                      <DetailRow label="Vehicle type" value={selected.vehicle.type} capitalize />
-                      <DetailRow label="Owner" value={selected.vehicle.owner} />
-                      <DetailRow label="Entry time" value={selected.vehicle.since} />
-                      <DetailRow label="Exit time" value={selected.vehicle.until} />
-                      <DetailRow label="Revenue" value={`€${selected.revenue.toFixed(2)}`} />
-                    </div>
-                    {selected.status === "occupied" && (
-                      <button className="release-btn" style={{ marginTop: 28 }} onClick={() => handleRelease(selected.id)}>
-                        Release spot
-                      </button>
-                    )}
-                    {selected.status === "booked" && (
-                      <button
-                        className="release-btn"
-                        style={{ marginTop: 28, background: "#4a6fa5" }}
-                        onClick={() => alert(`Cancelling booking for spot ${selected.id}...`)}
-                      >
-                        Cancel booking
-                      </button>
-                    )}
-                    {selected.status === "reserved" && (
-                      <button
-                        className="release-btn"
-                        style={{ marginTop: 28, background: "#c9841a" }}
-                        onClick={() => alert(`Releasing reservation for spot ${selected.id}...`)}
-                      >
-                        Release reservation
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <div style={{ borderTop: "1px solid #eee", paddingTop: 24, textAlign: "center", color: "#aaa", fontSize: 14 }}>
-                    <div style={{ fontSize: 32, marginBottom: 8 }}>🅿️</div>
-                    This spot is currently free.
-                  </div>
-                )}
-              </>
-            ) : (
+            {selected ? <ParkingSpotDetails selected={selected} statusColor={statusColor} /> : (
               <div style={{ textAlign: "center", color: "#bbb", fontSize: 14, padding: "40px 0" }}>
                 <div style={{ fontSize: 28, marginBottom: 12 }}>←</div>
                 Select a spot to see details

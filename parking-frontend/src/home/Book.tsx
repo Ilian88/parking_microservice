@@ -1,39 +1,17 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import type { CarErrors, TruckErrors, VehicleType, CarFormType, TruckFormType } from './book/types'
+import CarForm from './book/CarForm'
+import TruckForm from './book/TruckForm'
 
-type VehicleType = 'car' | 'truck'
-
-type EuroCategory = 'Euro 1' | 'Euro 2' | 'Euro 3' | 'Euro 4' | 'Euro 5' | 'Euro 6'
-
-type CarForm = {
-  licensePlate: string
-  euroCategory: EuroCategory | ''
-  make: string
-  model: string
-}
-
-type TruckForm = {
-  licensePlate: string
-  euroCategory: EuroCategory | ''
-  truckMake: string
-  truckModel: string
-  trailerMake: string
-  trailerModel: string
-  weight: string
-  length: string
-}
-
-type CarErrors   = Partial<Record<keyof CarForm,   string>>
-type TruckErrors = Partial<Record<keyof TruckForm, string>>
-
-const initialCar: CarForm = {
+const initialCar: CarFormType = {
   licensePlate: '',
   euroCategory: '',
   make: '',
   model: '',
 }
 
-const initialTruck: TruckForm = {
+const initialTruck: TruckFormType = {
   licensePlate: '',
   euroCategory: '',
   truckMake: '',
@@ -44,16 +22,14 @@ const initialTruck: TruckForm = {
   length: '',
 }
 
-const euroOptions: EuroCategory[] = ['Euro 1', 'Euro 2', 'Euro 3', 'Euro 4', 'Euro 5', 'Euro 6']
-
-function validateCar(f: CarForm): CarErrors {
+function validateCar(f: CarFormType): CarErrors {
   const e: CarErrors = {}
   if (!f.licensePlate.trim()) e.licensePlate = 'Required'
   if (!f.euroCategory)        e.euroCategory = 'Required'
   return e
 }
 
-function validateTruck(f: TruckForm): TruckErrors {
+function validateTruck(f: TruckFormType): TruckErrors {
   const e: TruckErrors = {}
   if (!f.licensePlate.trim()) e.licensePlate = 'Required'
   if (!f.euroCategory)        e.euroCategory = 'Required'
@@ -62,7 +38,7 @@ function validateTruck(f: TruckForm): TruckErrors {
   return e
 }
 
-function Field({
+export function Field({
   label, id, type = 'text', value, onChange, error, placeholder, required = false,
 }: {
   label: string
@@ -94,7 +70,7 @@ function Field({
   )
 }
 
-function SelectField({
+export function SelectField({
   label, id, value, onChange, error, options, placeholder, required = false,
 }: {
   label: string
@@ -128,7 +104,7 @@ function SelectField({
   )
 }
 
-function SectionLabel({ children }: { children: string }) {
+export function SectionLabel({ children }: { children: string }) {
   return (
     <p className="text-[11px] tracking-[0.15em] uppercase text-[#1a1a18]/35 font-medium mt-2">
       {children}
@@ -138,14 +114,14 @@ function SectionLabel({ children }: { children: string }) {
 
 export default function Book() {
   const [vehicleType, setVehicleType] = useState<VehicleType>('car')
-  const [car,   setCar]   = useState<CarForm>(initialCar)
-  const [truck, setTruck] = useState<TruckForm>(initialTruck)
+  const [car,   setCar]   = useState<CarFormType>(initialCar)
+  const [truck, setTruck] = useState<TruckFormType>(initialTruck)
   const [carErrors,   setCarErrors]   = useState<CarErrors>({})
   const [truckErrors, setTruckErrors] = useState<TruckErrors>({})
   const [submitted, setSubmitted] = useState(false)
 
-  const setCar_   = (key: keyof CarForm)   => (val: string) => setCar(p   => ({ ...p, [key]: val }))
-  const setTruck_ = (key: keyof TruckForm) => (val: string) => setTruck(p => ({ ...p, [key]: val }))
+  const setCar_   = (key: keyof CarFormType)   => (val: string) => setCar(p   => ({ ...p, [key]: val }))
+  const setTruck_ = (key: keyof TruckFormType) => (val: string) => setTruck(p => ({ ...p, [key]: val }))
 
   const handleSubmit = () => {
     if (vehicleType === 'car') {
@@ -238,126 +214,10 @@ export default function Book() {
         </div>
 
         {/* Car form */}
-        {vehicleType === 'car' && (
-          <div className="flex flex-col gap-5">
-            <SectionLabel>Vehicle details</SectionLabel>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Field
-                label="License plate" id="licensePlate"
-                value={car.licensePlate} onChange={setCar_('licensePlate')}
-                error={carErrors.licensePlate} placeholder="CA 1234 AB" required
-              />
-              <SelectField
-                label="Euro category" id="euroCategory"
-                value={car.euroCategory} onChange={setCar_('euroCategory')}
-                error={carErrors.euroCategory} options={euroOptions}
-                placeholder="Select category" required
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Field
-                label="Make" id="make"
-                value={car.make} onChange={setCar_('make')}
-                error={carErrors.make} placeholder="e.g. Toyota"
-              />
-              <Field
-                label="Model" id="model"
-                value={car.model} onChange={setCar_('model')}
-                error={carErrors.model} placeholder="e.g. Corolla"
-              />
-            </div>
-
-            <p className="text-[12px] text-[#1a1a18]/35 font-light">
-              Fields marked with <span className="text-red-400">*</span> are required.
-            </p>
-
-            <button
-              onClick={handleSubmit}
-              className="w-full bg-[#1a1a18] text-[#f7f6f2] py-4 rounded-sm text-[15px] font-medium hover:bg-[#333330] hover:-translate-y-px active:translate-y-0 transition-all mt-2"
-            >
-              Confirm booking
-            </button>
-          </div>
-        )}
+        {vehicleType === 'car' && <CarForm car={car} setCar_={setCar_} carErrors={carErrors} handleSubmit={handleSubmit} />}
 
         {/* Truck form */}
-        {vehicleType === 'truck' && (
-          <div className="flex flex-col gap-5">
-            <SectionLabel>Common details</SectionLabel>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Field
-                label="License plate" id="licensePlate"
-                value={truck.licensePlate} onChange={setTruck_('licensePlate')}
-                error={truckErrors.licensePlate} placeholder="CA 1234 AB" required
-              />
-              <SelectField
-                label="Euro category" id="euroCategory"
-                value={truck.euroCategory} onChange={setTruck_('euroCategory')}
-                error={truckErrors.euroCategory} options={euroOptions}
-                placeholder="Select category" required
-              />
-            </div>
-
-            <SectionLabel>Truck</SectionLabel>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Field
-                label="Truck make" id="truckMake"
-                value={truck.truckMake} onChange={setTruck_('truckMake')}
-                error={truckErrors.truckMake} placeholder="e.g. Volvo"
-              />
-              <Field
-                label="Truck model" id="truckModel"
-                value={truck.truckModel} onChange={setTruck_('truckModel')}
-                error={truckErrors.truckModel} placeholder="e.g. FH16"
-              />
-            </div>
-
-            <SectionLabel>Trailer</SectionLabel>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Field
-                label="Trailer make" id="trailerMake"
-                value={truck.trailerMake} onChange={setTruck_('trailerMake')}
-                error={truckErrors.trailerMake} placeholder="e.g. Schmitz"
-              />
-              <Field
-                label="Trailer model" id="trailerModel"
-                value={truck.trailerModel} onChange={setTruck_('trailerModel')}
-                error={truckErrors.trailerModel} placeholder="e.g. S.KO"
-              />
-            </div>
-
-            <SectionLabel>Composition</SectionLabel>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Field
-                label="Total weight (kg)" id="weight"
-                type="number" value={truck.weight} onChange={setTruck_('weight')}
-                error={truckErrors.weight} placeholder="e.g. 40000" required
-              />
-              <Field
-                label="Total length (m)" id="length"
-                type="number" value={truck.length} onChange={setTruck_('length')}
-                error={truckErrors.length} placeholder="e.g. 18.75" required
-              />
-            </div>
-
-            <p className="text-[12px] text-[#1a1a18]/35 font-light">
-              Fields marked with <span className="text-red-400">*</span> are required.
-            </p>
-
-            <button
-              onClick={handleSubmit}
-              className="w-full bg-[#1a1a18] text-[#f7f6f2] py-4 rounded-sm text-[15px] font-medium hover:bg-[#333330] hover:-translate-y-px active:translate-y-0 transition-all mt-2"
-            >
-              Confirm booking
-            </button>
-          </div>
-        )}
+        {vehicleType === 'truck' && <TruckForm truck={truck} setTruck_={setTruck_} truckErrors={truckErrors} handleSubmit={handleSubmit} />}
 
       </div>
     </div>
